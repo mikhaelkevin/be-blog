@@ -16,3 +16,31 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+$router->post('/login', function () {
+    return 'Login Endpoint';
+});
+
+$router->post('/register', function () {
+    return 'Register Endpoint';
+});
+
+$router->get('/users', function () {
+    return 'Get all users data endpoint';
+});
+
+$router->get('/articles', function () {
+    return 'Get all articles';
+});
+
+$router->post('/article', function () {
+    return 'Post some articles';
+});
+
+$router->patch('/article/{articleId}', function ($articleId) {
+    return 'Patch some article at id: ' . $articleId;
+});
+
+$router->delete('/article/{articleId}', function ($articleId) {
+    return 'Destroy some article at id: ' . $articleId;
+});

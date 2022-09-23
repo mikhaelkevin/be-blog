@@ -13,34 +13,17 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
+$router->group(['prefix' => 'auth'], function () use ($router) {
+    $router->post('/register', 'AuthController@register');
+    $router->post('/login', 'AuthController@login');
 });
 
-$router->post('/login', function () {
-    return 'Login Endpoint';
+$router->group(['prefix' => 'article', 'middleware' => 'auth'], function () use ($router) {
+    $router->get('/{articleId}', 'ArticleController@getArticle');
+    $router->post('/', 'ArticleController@createArticle');
+    $router->patch('/{articleId}', 'ArticleController@editArticle');
+    $router->delete('/{articleId}', 'ArticleController@deleteArticle');
 });
 
-$router->post('/register', function () {
-    return 'Register Endpoint';
-});
-
-$router->get('/users', function () {
-    return 'Get all users data endpoint';
-});
-
-$router->get('/articles', function () {
-    return 'Get all articles';
-});
-
-$router->post('/article', function () {
-    return 'Post some articles';
-});
-
-$router->patch('/article/{articleId}', function ($articleId) {
-    return 'Patch some article at id: ' . $articleId;
-});
-
-$router->delete('/article/{articleId}', function ($articleId) {
-    return 'Destroy some article at id: ' . $articleId;
-});
+$router->get('/user/{userId}', ['middleware' => 'auth', 'uses' => 'AuthController@getUserData']);
+$router->get('/articles', 'ArticleController@getArticles');

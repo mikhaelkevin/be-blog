@@ -16,14 +16,17 @@ class TagController extends Controller
     public function getTag($tagId)
     {
         $tag = Tag::find($tagId);
+        error_log($tag);
         return response()->json($tag);
     }
 
     public function createTag(Request $req)
     {
         $validated = $this->validate($req, [
-            'tagName' => 'required|unique: tags, tag_name|min:3'
+            'tagName' => 'required|unique:tags,tag_name|min:3'
         ]);
+
+        error_log($req->tagName);
 
         $tag = new Tag();
         $tag->tag_name = $validated['tagName'];
@@ -33,10 +36,14 @@ class TagController extends Controller
     }
     public function editTag(Request $req, $tagId)
     {
+        $validated = $this->validate($req, [
+            'tagName' => 'unique:tags,tag_name'
+        ]);
+
         $tag = Tag::find($tagId);
         if (!$tag) return response()->json(['message' => 'Cannot found spesific tag!'], 404);
 
-        $tempTagName = $req->tagName ? $req->tagName : $tag->tag_name;
+        $tempTagName = $validated['tagName'] ? $validated['tagName'] : $tag->tag_name;
 
         $tag->update([
             'tag_name' => $tempTagName

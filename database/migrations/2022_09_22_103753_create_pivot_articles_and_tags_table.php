@@ -13,11 +13,11 @@ class CreatePivotArticlesAndTagsTable extends Migration
      */
     public function up()
     {
-        Schema::create('article_tags', function (Blueprint $table) {
+        Schema::create('article_tag', function (Blueprint $table) {
             $table->timestamps();
         });
 
-        Schema::table('article_tags', function (Blueprint $table) {
+        Schema::table('article_tag', function (Blueprint $table) {
             $table->unsignedBigInteger('article_id');
             $table->foreign('article_id')->references('id')->on('articles')->onDelete('cascade');
             $table->unsignedBigInteger('tag_id')->nullable();
@@ -32,9 +32,9 @@ class CreatePivotArticlesAndTagsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('article_tags');
+        Schema::dropIfExists('article_tag');
 
-        Schema::table('article_tags', function (Blueprint $table) {
+        Schema::table('article_tag', function (Blueprint $table) {
             $table->dropForeign(['article_id']);
             $table->dropColumn(['article_id']);
             $table->dropForeign(['tag_id']);

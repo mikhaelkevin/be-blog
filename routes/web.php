@@ -25,5 +25,21 @@ $router->group(['prefix' => 'article', 'middleware' => 'auth'], function () use 
     $router->delete('/{articleId}', 'ArticleController@deleteArticle');
 });
 
+$router->group(['prefix' => 'category', 'middleware' => 'auth'], function () use ($router) {
+    $router->get('/', 'CategoryController@getCategories');
+    $router->get('/{categoryId}', 'CategoryController@getCategory');
+    $router->post('/', 'CategoryController@createCategory');
+    $router->patch('/{categoryId}', 'CategoryController@editCategory');
+    $router->delete('/{categoryId}', 'CategoryController@deleteCategory');
+});
+
+$router->group(['prefix' => 'tag', 'middleware' => 'auth'], function () use ($router) {
+    $router->get('/', 'TagController@getTags');
+    $router->get('/{tagId}', 'TagController@getTag');
+    $router->post('/', 'TagController@createTag');
+    $router->patch('/{tagId}', 'TagController@editTag');
+    $router->delete('/{tagId}', 'TagController@deleteTag');
+});
+
 $router->get('/user/{userId}', ['middleware' => 'auth', 'uses' => 'AuthController@getUserData']);
 $router->get('/articles', 'ArticleController@getArticles');

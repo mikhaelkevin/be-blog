@@ -16,7 +16,6 @@ class TagController extends Controller
     public function getTag($tagId)
     {
         $tag = Tag::find($tagId);
-        error_log($tag);
         return response()->json($tag);
     }
 
@@ -25,8 +24,6 @@ class TagController extends Controller
         $validated = $this->validate($req, [
             'tagName' => 'required|unique:tags,tag_name|min:3'
         ]);
-
-        error_log($req->tagName);
 
         $tag = new Tag();
         $tag->tag_name = $validated['tagName'];

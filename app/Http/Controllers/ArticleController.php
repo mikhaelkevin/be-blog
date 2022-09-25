@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use App\Models\ArticleTag;
 use App\Models\Tag;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use JD\Cloudder\Facades\Cloudder;
 
 class ArticleController extends Controller
 {
@@ -22,7 +22,7 @@ class ArticleController extends Controller
             }
         }
 
-        return response()->json($articles);
+        return response()->json($articles->makeHidden(['picture_id']));
     }
 
     public function getArticle($articleId)
@@ -34,7 +34,7 @@ class ArticleController extends Controller
             $tagObj->tagName = Tag::find($tagObj->tag_id, 'tag_name')->tag_name;
         }
 
-        return response()->json($article);
+        return response()->json($article->makeHidden(['picture_id']));
     }
 
     public function createArticle(Request $req)
@@ -43,7 +43,8 @@ class ArticleController extends Controller
         $validated = $this->validate($req, [
             'title' => 'required|min:6',
             'content' => 'required',
-            'categoryId' => 'exists:categories,id'
+            'categoryId' => 'exists:categories,id',
+            'picture' => 'mimes:jpg,jpeg,png,svg|max:3056'
         ]);
 
         $tags = json_decode($req->tags);
@@ -54,11 +55,22 @@ class ArticleController extends Controller
             }
         }
 
+        $requestFile = $req->file('picture');
+        $uploadedFile = (object) [];
+        if ($req->hasFile('picture') && $requestFile->isValid()) {
+            $imageUpload = Cloudder::upload($requestFile->getRealPath(), null, ['folder' => 'blog-alba-tech']);
+            $uploadResult = $imageUpload->getResult();
+            $uploadedFile->fileUrl = $uploadResult['url'];
+            $uploadedFile->fileId = $uploadResult['public_id'];
+        }
+
         $article = new Article();
         $article->title = $validated['title'];
         $article->content = $validated['content'];
         $article->user_id = $userId;
         $article->category_id = $validated['categoryId'] ? $validated['categoryId'] : null;
+        $article->picture = $uploadedFile->fileUrl ? $uploadedFile->fileUrl : null;
+        $article->picture_id = $uploadedFile->fileId ? $uploadedFile->fileId : null;
         $article->save();
 
         foreach ($tags as $tagId) {
@@ -86,14 +98,29 @@ class ArticleController extends Controller
             }
         }
 
+        $requestFile = $req->file('picture');
+        $uploadedFile = (object) [];
+        if ($req->hasFile('picture') && $requestFile->isValid()) {
+            if ($oldArticle->picture_id) {
+                Cloudder::destroyImage($oldArticle->picture_id);
+            }
+            $imageUpload = Cloudder::upload($requestFile->getRealPath(), null, ['folder' => 'blog-alba-tech'])->getResult();
+            $uploadedFile->fileUrl = $imageUpload['url'];
+            $uploadedFile->fileId = $imageUpload['public_id'];
+        }
+
         $title = $req->title ? $req->title : $oldArticle->title;
         $content = $req->content ? $req->content : $oldArticle->content;
         $categoryId = $validated['categoryId'] ? $validated['categoryId'] : $oldArticle->category_id;
+        $picture = property_exists($uploadedFile, 'fileUrl') ? $uploadedFile->fileUrl : $oldArticle->picture;
+        $pictureId = property_exists($uploadedFile, 'fileId') ? $uploadedFile->fileId : $oldArticle->picture_id;
 
         Article::where('id', $articleId)->where('user_id', $userId)->update([
             'title' => $title,
             'content' => $content,
-            'category_id' => $categoryId
+            'category_id' => $categoryId,
+            'picture' => $picture,
+            'picture_id' => $pictureId,
         ]);
 
         ArticleTag::where('article_id', $articleId)->delete();

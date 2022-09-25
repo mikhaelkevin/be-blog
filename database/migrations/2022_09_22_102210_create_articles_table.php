@@ -17,6 +17,8 @@ class CreateArticlesTable extends Migration
             $table->bigIncrements('id');
             $table->string('title');
             $table->text('content');
+            $table->text('picture');
+            $table->string('picture_id');
             $table->timestamps();
         });
     }

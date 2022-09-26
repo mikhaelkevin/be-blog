@@ -136,6 +136,9 @@ class ArticleController extends Controller
         $articleFounded = Article::where('id', $articleId)->where('user_id', $userId)->first();
         if (!$articleFounded) return response()->json(['message' => "Couldn't found your article!"]);
 
+        if ($$articleFounded->picture_id) {
+            Cloudder::destroyImage($oldArticle->picture_id);
+        }
         $articleFounded->delete();
         return response()->json(['message' => 'Article deleted!']);
     }

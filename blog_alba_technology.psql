@@ -1,0 +1,451 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 14.3
+-- Dumped by pg_dump version 14.3
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: article_tag; Type: TABLE; Schema: public; Owner: nocturndev
+--
+
+CREATE TABLE public.article_tag (
+    created_at timestamp(0) without time zone,
+    updated_at timestamp(0) without time zone,
+    article_id bigint NOT NULL,
+    tag_id bigint
+);
+
+
+ALTER TABLE public.article_tag OWNER TO nocturndev;
+
+--
+-- Name: articles; Type: TABLE; Schema: public; Owner: nocturndev
+--
+
+CREATE TABLE public.articles (
+    id bigint NOT NULL,
+    title character varying(255) NOT NULL,
+    content text NOT NULL,
+    picture text NOT NULL,
+    picture_id character varying(255) NOT NULL,
+    created_at timestamp(0) without time zone,
+    updated_at timestamp(0) without time zone,
+    user_id bigint,
+    category_id bigint
+);
+
+
+ALTER TABLE public.articles OWNER TO nocturndev;
+
+--
+-- Name: articles_id_seq; Type: SEQUENCE; Schema: public; Owner: nocturndev
+--
+
+CREATE SEQUENCE public.articles_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.articles_id_seq OWNER TO nocturndev;
+
+--
+-- Name: articles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: nocturndev
+--
+
+ALTER SEQUENCE public.articles_id_seq OWNED BY public.articles.id;
+
+
+--
+-- Name: categories; Type: TABLE; Schema: public; Owner: nocturndev
+--
+
+CREATE TABLE public.categories (
+    id bigint NOT NULL,
+    category_name character varying(255) NOT NULL,
+    created_at timestamp(0) without time zone,
+    updated_at timestamp(0) without time zone
+);
+
+
+ALTER TABLE public.categories OWNER TO nocturndev;
+
+--
+-- Name: categories_id_seq; Type: SEQUENCE; Schema: public; Owner: nocturndev
+--
+
+CREATE SEQUENCE public.categories_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.categories_id_seq OWNER TO nocturndev;
+
+--
+-- Name: categories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: nocturndev
+--
+
+ALTER SEQUENCE public.categories_id_seq OWNED BY public.categories.id;
+
+
+--
+-- Name: migrations; Type: TABLE; Schema: public; Owner: nocturndev
+--
+
+CREATE TABLE public.migrations (
+    id integer NOT NULL,
+    migration character varying(255) NOT NULL,
+    batch integer NOT NULL
+);
+
+
+ALTER TABLE public.migrations OWNER TO nocturndev;
+
+--
+-- Name: migrations_id_seq; Type: SEQUENCE; Schema: public; Owner: nocturndev
+--
+
+CREATE SEQUENCE public.migrations_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.migrations_id_seq OWNER TO nocturndev;
+
+--
+-- Name: migrations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: nocturndev
+--
+
+ALTER SEQUENCE public.migrations_id_seq OWNED BY public.migrations.id;
+
+
+--
+-- Name: tags; Type: TABLE; Schema: public; Owner: nocturndev
+--
+
+CREATE TABLE public.tags (
+    id bigint NOT NULL,
+    tag_name character varying(255) NOT NULL,
+    created_at timestamp(0) without time zone,
+    updated_at timestamp(0) without time zone
+);
+
+
+ALTER TABLE public.tags OWNER TO nocturndev;
+
+--
+-- Name: tags_id_seq; Type: SEQUENCE; Schema: public; Owner: nocturndev
+--
+
+CREATE SEQUENCE public.tags_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tags_id_seq OWNER TO nocturndev;
+
+--
+-- Name: tags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: nocturndev
+--
+
+ALTER SEQUENCE public.tags_id_seq OWNED BY public.tags.id;
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: nocturndev
+--
+
+CREATE TABLE public.users (
+    id bigint NOT NULL,
+    email character varying(255) NOT NULL,
+    password character varying(255) NOT NULL,
+    name character varying(255) NOT NULL,
+    created_at timestamp(0) without time zone,
+    updated_at timestamp(0) without time zone
+);
+
+
+ALTER TABLE public.users OWNER TO nocturndev;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: nocturndev
+--
+
+CREATE SEQUENCE public.users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.users_id_seq OWNER TO nocturndev;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: nocturndev
+--
+
+ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
+
+
+--
+-- Name: articles id; Type: DEFAULT; Schema: public; Owner: nocturndev
+--
+
+ALTER TABLE ONLY public.articles ALTER COLUMN id SET DEFAULT nextval('public.articles_id_seq'::regclass);
+
+
+--
+-- Name: categories id; Type: DEFAULT; Schema: public; Owner: nocturndev
+--
+
+ALTER TABLE ONLY public.categories ALTER COLUMN id SET DEFAULT nextval('public.categories_id_seq'::regclass);
+
+
+--
+-- Name: migrations id; Type: DEFAULT; Schema: public; Owner: nocturndev
+--
+
+ALTER TABLE ONLY public.migrations ALTER COLUMN id SET DEFAULT nextval('public.migrations_id_seq'::regclass);
+
+
+--
+-- Name: tags id; Type: DEFAULT; Schema: public; Owner: nocturndev
+--
+
+ALTER TABLE ONLY public.tags ALTER COLUMN id SET DEFAULT nextval('public.tags_id_seq'::regclass);
+
+
+--
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: nocturndev
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- Data for Name: article_tag; Type: TABLE DATA; Schema: public; Owner: nocturndev
+--
+
+COPY public.article_tag (created_at, updated_at, article_id, tag_id) FROM stdin;
+\N	\N	1	1
+\N	\N	1	7
+\N	\N	1	8
+\.
+
+
+--
+-- Data for Name: articles; Type: TABLE DATA; Schema: public; Owner: nocturndev
+--
+
+COPY public.articles (id, title, content, picture, picture_id, created_at, updated_at, user_id, category_id) FROM stdin;
+1	Basic Programming Golang	Hello, this is a article for all of you who looking for golang programming language practice.	http://res.cloudinary.com/nocturncloud/image/upload/v1664152655/blog-alba-tech/hbcbvxznlkjiutt1olef.png	blog-alba-tech/hbcbvxznlkjiutt1olef	2022-09-26 00:37:21	2022-09-26 00:37:21	1	4
+\.
+
+
+--
+-- Data for Name: categories; Type: TABLE DATA; Schema: public; Owner: nocturndev
+--
+
+COPY public.categories (id, category_name, created_at, updated_at) FROM stdin;
+1	Comic	2022-09-26 00:29:50	2022-09-26 00:29:50
+2	News	2022-09-26 00:29:59	2022-09-26 00:29:59
+3	Novel	2022-09-26 00:30:07	2022-09-26 00:30:07
+4	Programming	2022-09-26 00:30:12	2022-09-26 00:30:12
+\.
+
+
+--
+-- Data for Name: migrations; Type: TABLE DATA; Schema: public; Owner: nocturndev
+--
+
+COPY public.migrations (id, migration, batch) FROM stdin;
+1	2022_09_22_102151_create_users_table	1
+2	2022_09_22_102210_create_articles_table	1
+3	2022_09_22_102230_create_categories_table	1
+4	2022_09_22_102245_create_tags_table	1
+5	2022_09_22_102957_add_foreign_key_to_articles	1
+6	2022_09_22_103753_create_pivot_articles_and_tags_table	1
+\.
+
+
+--
+-- Data for Name: tags; Type: TABLE DATA; Schema: public; Owner: nocturndev
+--
+
+COPY public.tags (id, tag_name, created_at, updated_at) FROM stdin;
+1	Technology	2022-09-26 00:25:00	2022-09-26 00:25:00
+2	Food	2022-09-26 00:25:04	2022-09-26 00:25:04
+3	Trip	2022-09-26 00:25:13	2022-09-26 00:25:13
+4	Emotional	2022-09-26 00:25:19	2022-09-26 00:25:19
+5	Electronic	2022-09-26 00:25:26	2022-09-26 00:25:26
+6	Viral	2022-09-26 00:25:32	2022-09-26 00:25:32
+7	Hype	2022-09-26 00:25:36	2022-09-26 00:25:36
+8	Business	2022-09-26 00:28:05	2022-09-26 00:28:45
+\.
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: nocturndev
+--
+
+COPY public.users (id, email, password, name, created_at, updated_at) FROM stdin;
+1	mikhaelkevin@gmail.com	$2y$10$/GnFMbLdHCD03/90qnPuXeBLADDXck/iEeRJs78TJnr1JS8Kg27gS	Mikhael Kevin	2022-09-26 00:23:48	2022-09-26 00:23:48
+7	dasdasd@dasdsad	$2y$10$5EZxHF25fNDpiYCsr2f7oe7gawtyNyDZzj9BDavKwlooafFzxkqa2	kevin	2022-09-27 07:35:54	2022-09-27 07:35:54
+8	dasdasd@dasdsad1	$2y$10$7gYG5FE9icrG1ITKAHWh9.kSMBzb6anv7Ughf5nZ1SdM5ArrZ0JuO	kevin	2022-09-27 07:36:13	2022-09-27 07:36:13
+9	dasdasd@dasdsad11	$2y$10$tPqP0nD7E2P5pzNpnFDonuywhjDyDQhOVEFYu7EtM8aVaEShX1Utq	kevin1	2022-09-27 07:36:49	2022-09-27 07:36:49
+10	mikhaelkevin111@gmail.com	$2y$10$zP4LLw.DCSFMaYW/ykMOjuaVps6UTZGePDS8N9D1gtk6EQvjMS9ze	kevin	2022-09-27 07:37:13	2022-09-27 07:37:13
+11	mikhaelkevin1113@gmail.com	$2y$10$W/MV4q90gvilUBnjI6lXyu43pTJlfQCk/rAEXMplzEhUvZYwqp49K	kevin	2022-09-27 07:37:43	2022-09-27 07:37:43
+12	mikhaelkevin11132@gmail.com	$2y$10$gr5jORH67EQfJvll6dRA.utCUqy3ClNzACh17FkBqWQXvs/.4D9G2	kevin	2022-09-27 07:37:50	2022-09-27 07:37:50
+13	mikhaelkevin111344@gmail.com	$2y$10$toa/5SOf4kHYJv4UMjttHub7R.qpIg.K7Ek18jaxfr8yOt5JK5to6	kevin	2022-09-27 07:38:01	2022-09-27 07:38:01
+14	1234@1234	$2y$10$e6diULFt94x1dlAieN8YXeAu7WhT2ctUGqMA4ho7t19IWauGPMtkG	1234	2022-09-27 07:51:47	2022-09-27 07:51:47
+\.
+
+
+--
+-- Name: articles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: nocturndev
+--
+
+SELECT pg_catalog.setval('public.articles_id_seq', 2, true);
+
+
+--
+-- Name: categories_id_seq; Type: SEQUENCE SET; Schema: public; Owner: nocturndev
+--
+
+SELECT pg_catalog.setval('public.categories_id_seq', 5, true);
+
+
+--
+-- Name: migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: nocturndev
+--
+
+SELECT pg_catalog.setval('public.migrations_id_seq', 6, true);
+
+
+--
+-- Name: tags_id_seq; Type: SEQUENCE SET; Schema: public; Owner: nocturndev
+--
+
+SELECT pg_catalog.setval('public.tags_id_seq', 9, true);
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: nocturndev
+--
+
+SELECT pg_catalog.setval('public.users_id_seq', 14, true);
+
+
+--
+-- Name: articles articles_pkey; Type: CONSTRAINT; Schema: public; Owner: nocturndev
+--
+
+ALTER TABLE ONLY public.articles
+    ADD CONSTRAINT articles_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: categories categories_pkey; Type: CONSTRAINT; Schema: public; Owner: nocturndev
+--
+
+ALTER TABLE ONLY public.categories
+    ADD CONSTRAINT categories_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: migrations migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: nocturndev
+--
+
+ALTER TABLE ONLY public.migrations
+    ADD CONSTRAINT migrations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tags tags_pkey; Type: CONSTRAINT; Schema: public; Owner: nocturndev
+--
+
+ALTER TABLE ONLY public.tags
+    ADD CONSTRAINT tags_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users users_email_unique; Type: CONSTRAINT; Schema: public; Owner: nocturndev
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_email_unique UNIQUE (email);
+
+
+--
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: nocturndev
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: article_tag article_tag_article_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: nocturndev
+--
+
+ALTER TABLE ONLY public.article_tag
+    ADD CONSTRAINT article_tag_article_id_foreign FOREIGN KEY (article_id) REFERENCES public.articles(id) ON DELETE CASCADE;
+
+
+--
+-- Name: article_tag article_tag_tag_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: nocturndev
+--
+
+ALTER TABLE ONLY public.article_tag
+    ADD CONSTRAINT article_tag_tag_id_foreign FOREIGN KEY (tag_id) REFERENCES public.tags(id) ON UPDATE CASCADE ON DELETE SET NULL;
+
+
+--
+-- Name: articles articles_category_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: nocturndev
+--
+
+ALTER TABLE ONLY public.articles
+    ADD CONSTRAINT articles_category_id_foreign FOREIGN KEY (category_id) REFERENCES public.categories(id) ON UPDATE CASCADE ON DELETE SET NULL;
+
+
+--
+-- Name: articles articles_user_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: nocturndev
+--
+
+ALTER TABLE ONLY public.articles
+    ADD CONSTRAINT articles_user_id_foreign FOREIGN KEY (user_id) REFERENCES public.users(id) ON UPDATE CASCADE ON DELETE SET NULL;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
